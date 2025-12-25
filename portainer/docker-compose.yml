@@ -1,0 +1,17 @@
+services:
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: unless-stopped
+    # LAN access
+    ports:
+      - "9000:9000"
+    networks:
+      - containers_network
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /opt/ratlab/data/portainer:/data
+
+networks:
+  containers_network:
+    external: true

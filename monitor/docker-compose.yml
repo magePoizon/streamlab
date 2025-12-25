@@ -1,0 +1,77 @@
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: unless-stopped
+    # LAN access
+    ports:
+      - "9090:9090"
+    # Public URL for correct links behind Cloudflare Access
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--web.external-url=https://prometheus.ratbzn.com"
+    networks:
+      - containers_network
+    volumes:
+      - /opt/ratlab/monitor/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - /opt/ratlab/data/prometheus:/prometheus
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: unless-stopped
+    # LAN access
+    ports:
+      - "3000:3000"
+    networks:
+      - containers_network
+    volumes:
+      - /opt/ratlab/data/grafana:/var/lib/grafana
+      - /opt/ratlab/monitor/grafana/provisioning:/etc/grafana/provisioning:ro
+      - /opt/ratlab/monitor/grafana/dashboards:/etc/grafana/dashboards:ro
+    env_file:
+      - /opt/ratlab/secrets/monitor.env
+
+  filebrowser:
+    image: filebrowser/filebrowser:latest
+    container_name: filebrowser
+    restart: unless-stopped
+    # LAN access
+    ports:
+      - "8081:80"
+    networks:
+      - containers_network
+    volumes:
+      - /opt/ratlab:/srv
+      - /opt/ratlab/data/filebrowser:/database
+    command:
+      - "--database=/database/filebrowser.db"
+      - "--root=/srv"
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    restart: unless-stopped
+    networks:
+      - containers_network
+    pid: host
+    volumes:
+      - /:/host:ro,rslave
+    command:
+      - "--path.rootfs=/host"
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    restart: unless-stopped
+    networks:
+      - containers_network
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+
+networks:
+  containers_network:
+    external: true

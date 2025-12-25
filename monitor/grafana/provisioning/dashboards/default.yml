@@ -1,0 +1,11 @@
+apiVersion: 1
+providers:
+  - name: "default"
+    orgId: 1
+    folder: "Streamlab"
+    type: file
+    disableDeletion: false
+    editable: true
+    allowUiUpdates: true
+    options:
+      path: /etc/grafana/dashboards

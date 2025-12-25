@@ -1,0 +1,26 @@
+{
+  "uid": "streamlab-overview",
+  "title": "streamlab Overview",
+  "timezone": "browser",
+  "schemaVersion": 38,
+  "version": 1,
+  "editable": true,
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Targets Up",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "count(up == 1)"
+        }
+      ],
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      }
+    }
+  ]
+}
