@@ -13,8 +13,10 @@ services:
     networks:
       - containers_network
     volumes:
-      - /opt/ratlab/monitor/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-      - /opt/ratlab/data/prometheus:/prometheus
+      - /opt/streamlab/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - /opt/streamlab/data/prometheus:/prometheus
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
 
   grafana:
     image: grafana/grafana:latest
@@ -26,27 +28,13 @@ services:
     networks:
       - containers_network
     volumes:
-      - /opt/ratlab/data/grafana:/var/lib/grafana
-      - /opt/ratlab/monitor/grafana/provisioning:/etc/grafana/provisioning:ro
-      - /opt/ratlab/monitor/grafana/dashboards:/etc/grafana/dashboards:ro
+      - /opt/streamlab/data/grafana:/var/lib/grafana
+      - /opt/streamlab/monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - /opt/streamlab/monitoring/grafana/dashboards:/etc/grafana/dashboards:ro
     env_file:
-      - /opt/ratlab/secrets/monitor.env
-
-  filebrowser:
-    image: filebrowser/filebrowser:latest
-    container_name: filebrowser
-    restart: unless-stopped
-    # LAN access
-    ports:
-      - "8081:80"
-    networks:
-      - containers_network
-    volumes:
-      - /opt/ratlab:/srv
-      - /opt/ratlab/data/filebrowser:/database
-    command:
-      - "--database=/database/filebrowser.db"
-      - "--root=/srv"
+      - /opt/streamlab/secrets/monitor.env
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
 
   node-exporter:
     image: prom/node-exporter:latest
@@ -59,6 +47,8 @@ services:
       - /:/host:ro,rslave
     command:
       - "--path.rootfs=/host"
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
@@ -71,6 +61,8 @@ services:
       - /var/run:/var/run:ro
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
 
 networks:
   containers_network:

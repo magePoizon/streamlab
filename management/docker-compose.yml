@@ -1,0 +1,69 @@
+services:
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: unless-stopped
+    # LAN access
+    ports:
+      - "9000:9000"
+    networks:
+      - containers_network
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /opt/streamlab/data/portainer:/data
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    env_file:
+      - /opt/streamlab/secrets/watchtower.env
+    environment:
+      WATCHTOWER_NOTIFICATIONS: shoutrrr
+      WATCHTOWER_NOTIFICATION_REPORT: "true"
+      DOCKER_API_VERSION: "1.44"
+    command: >
+      --monitor-only
+      --label-enable
+      --schedule "30 4 * * *"
+      --cleanup
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    env_file:
+      - /opt/streamlab/secrets/core.env
+    networks:
+      - containers_network
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  filebrowser:
+    image: filebrowser/filebrowser:latest
+    container_name: filebrowser
+    restart: unless-stopped
+    # LAN access
+    ports:
+      - "8081:80"
+    networks:
+      - containers_network
+    volumes:
+      - /opt/streamlab:/srv
+      - /opt/streamlab/data/filebrowser:/database
+    command:
+      - "--database=/database/filebrowser.db"
+      - "--root=/srv"
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+networks:
+  containers_network:
+    external: true
