@@ -1,0 +1,69 @@
+services:
+  gluetun:
+    image: qmcgaw/gluetun:latest
+    container_name: gluetun
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    # TEMP: LAN access for AIOStreams/StremThru (remove after Cloudflare is live)
+    ports:
+      - "3001:3000"
+      - "8082:8080"
+    env_file:
+      - /opt/streamlab/secrets/gluetun.env
+    networks:
+      - containers_network
+    healthcheck:
+      test: ["CMD", "/gluetun-entrypoint", "healthcheck"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  gost:
+    image: ginuerzh/gost:latest
+    container_name: gost
+    restart: unless-stopped
+    network_mode: "service:gluetun"
+    depends_on:
+      gluetun:
+        condition: service_healthy
+    command: ["-L", "http://:8888", "-L", "socks5://:1080"]
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  aiostreams:
+    image: ghcr.io/viren070/aiostreams:latest
+    container_name: aiostreams
+    restart: unless-stopped
+    network_mode: "service:gluetun"
+    env_file:
+      - /opt/streamlab/secrets/aiostreams.env
+    volumes:
+      - /opt/streamlab/data/aiostreams:/app/data
+    depends_on:
+      gluetun:
+        condition: service_healthy
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  stremthru:
+    image: muniftanjim/stremthru:latest
+    container_name: stremthru
+    restart: unless-stopped
+    network_mode: "service:gluetun"
+    env_file:
+      - /opt/streamlab/secrets/stremthru.env
+    volumes:
+      - /opt/streamlab/data/stremthru:/data
+    depends_on:
+      gluetun:
+        condition: service_healthy
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+networks:
+  containers_network:
+    external: true
