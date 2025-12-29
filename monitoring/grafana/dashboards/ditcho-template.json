@@ -651,7 +651,7 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "(sum(rate(container_cpu_usage_seconds_total{name!=\"\"}[5m])) by (name) / scalar(count(count(node_cpu_seconds_total{job=\"node-exporter\"}) by (cpu)))) * 100",
+          "expr": "(sum(rate(container_cpu_usage_seconds_total{container_label_com_docker_compose_service!=\"\"}[5m])) by (container_label_com_docker_compose_service) / scalar(count(count(node_cpu_seconds_total{job=\"node-exporter\"}) by (cpu)))) * 100",
           "legendFormat": "{{name}}",
           "range": true,
           "refId": "A"
@@ -751,7 +751,7 @@
       "pluginVersion": "12.2.0",
       "targets": [
         {
-          "expr": "sum(container_memory_usage_bytes{name!=\"\"}) by (name)",
+          "expr": "sum(container_memory_usage_bytes{container_label_com_docker_compose_service!=\"\"}) by (container_label_com_docker_compose_service)",
           "legendFormat": "{{name}}",
           "refId": "A"
         }
@@ -928,12 +928,12 @@
       "pluginVersion": "12.2.0",
       "targets": [
         {
-          "expr": "sum(irate(container_network_receive_bytes_total{name!=\"\"}[5m])) by (name)",
+          "expr": "sum(irate(container_network_receive_bytes_total{container_label_com_docker_compose_service!=\"\"}[5m])) by (container_label_com_docker_compose_service)",
           "legendFormat": "In: {{name}}",
           "refId": "A"
         },
         {
-          "expr": "sum(irate(container_network_transmit_bytes_total{name!=\"\"}[5m])) by (name)",
+          "expr": "sum(irate(container_network_transmit_bytes_total{container_label_com_docker_compose_service!=\"\"}[5m])) by (container_label_com_docker_compose_service)",
           "legendFormat": "Out: {{name}}",
           "refId": "B"
         }
@@ -1033,14 +1033,14 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": " sum(irate(container_network_transmit_bytes_total{name=\"gluetun\", interface=\"eth0\"}[5m]))",
+          "expr": " sum(irate(container_network_transmit_bytes_total{container_label_com_docker_compose_service=\"gluetun\", interface=\"eth0\"}[5m]))",
           "legendFormat": "VPN Traffic (gluetun)",
           "range": true,
           "refId": "A"
         },
         {
           "editorMode": "code",
-          "expr": "sum(irate(container_network_transmit_bytes_total{name!~\"gluetun|node-exporter\", name!=\"\"}[5m])) by (name)",
+          "expr": "sum(irate(container_network_transmit_bytes_total{container_label_com_docker_compose_service!~\"gluetun|node-exporter\", container_label_com_docker_compose_service!=\"\"}[5m])) by (container_label_com_docker_compose_service)",
           "legendFormat": "{{name}}",
           "range": true,
           "refId": "B"
@@ -1079,6 +1079,6 @@
   "timepicker": {},
   "timezone": "browser",
   "title": "Ditcho Template",
-  "uid": "ditcho_stylev1",
+  "uid": "ditcho-stylev1",
   "version": 34
 }

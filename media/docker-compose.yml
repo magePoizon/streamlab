@@ -8,7 +8,7 @@ services:
     # TEMP: LAN access for AIOStreams/StremThru (remove after Cloudflare is live)
     ports:
       - "3001:3000"
-      - "8082:8080"
+      - "8082:8082"
     env_file:
       - /opt/streamlab/secrets/gluetun.env
     networks:
