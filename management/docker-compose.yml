@@ -24,21 +24,26 @@ services:
       - /opt/streamlab/secrets/watchtower.env
     environment:
       WATCHTOWER_NOTIFICATIONS: shoutrrr
-      WATCHTOWER_NOTIFICATION_REPORT: "true"
+      WATCHTOWER_NOTIFICATION_TEMPLATE: "@everyone {{range .}}{{.Message}}{{println}}{{end}}"
+      WATCHTOWER_NOTIFICATION_SKIP_TITLE: "true"
       DOCKER_API_VERSION: "1.44"
     command: >
       --monitor-only
       --label-enable
-      --schedule "30 4 * * *"
+      --schedule "0 30 4 * * *"
       --cleanup
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
+
 
   cloudflared:
     image: cloudflare/cloudflared:latest
     container_name: cloudflared
     restart: unless-stopped
     command: tunnel --no-autoupdate run
+    dns:
+      - 1.1.1.1
+      - 1.0.0.1
     env_file:
       - /opt/streamlab/secrets/core.env
     networks:
@@ -61,6 +66,20 @@ services:
     command:
       - "--database=/database/filebrowser.db"
       - "--root=/srv"
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  uptime-kuma:
+    image: louislam/uptime-kuma:latest
+    container_name: uptime-kuma
+    restart: unless-stopped
+    ports:
+      - "3003:3001"
+    networks:
+      - containers_network
+    volumes:
+      - /opt/streamlab/data/uptime-kuma:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
 
