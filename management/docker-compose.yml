@@ -61,11 +61,12 @@ services:
     networks:
       - containers_network
     volumes:
-      - /opt/streamlab:/srv
+      - /opt/streamlab:/srv:ro
       - /opt/streamlab/data/filebrowser:/database
     command:
       - "--database=/database/filebrowser.db"
       - "--root=/srv"
+    user: "1000:1000"
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
 
