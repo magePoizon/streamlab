@@ -490,11 +490,11 @@ sudo chmod -R 775 /opt/streamlab/data/prometheus
 ```
 
 #### Grafana Setup
-**File:** `/opt/streamlab/secrets/monitor.env`
+**File:** `/opt/streamlab/secrets/grafana.env`
 
 ```bash
 cd /opt/streamlab/secrets/
-nano /opt/streamlab/secrets/monitor.env
+nano /opt/streamlab/secrets/grafana.env
 ```
 
 ```plaintext
@@ -641,7 +641,7 @@ services:
       - /opt/streamlab/monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
       - /opt/streamlab/monitoring/grafana/dashboards:/etc/grafana/dashboards:ro
     env_file:
-      - /opt/streamlab/secrets/monitor.env
+      - /opt/streamlab/secrets/grafana.env
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
 
@@ -945,7 +945,7 @@ secrets/
 ### 7.2 Store safe templates in git (I cba with this but maybe something for down the line)
 Create examples in repo (tracked):
 - `/opt/streamlab/secrets/`
-- `/opt/streamlab/secrets/monitor.env.example`
+- `/opt/streamlab/secrets/grafana.env.example`
 
 
 ### 7.3 Initialize repo

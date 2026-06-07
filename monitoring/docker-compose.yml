@@ -32,7 +32,7 @@ services:
       - /opt/streamlab/monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
       - /opt/streamlab/monitoring/grafana/dashboards:/etc/grafana/dashboards:ro
     env_file:
-      - /opt/streamlab/secrets/monitor.env
+      - /opt/streamlab/secrets/grafana.env
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
 
