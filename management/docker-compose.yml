@@ -45,7 +45,7 @@ services:
       - 1.1.1.1
       - 1.0.0.1
     env_file:
-      - /opt/streamlab/secrets/core.env
+      - /opt/streamlab/secrets/cloudflared.env
     networks:
       - containers_network
     labels:

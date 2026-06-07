@@ -311,7 +311,7 @@ Add Google IdP setup to "Applications"
 Zero Trust -> Applications
 
 
-**File:** `/opt/streamlab/secrets/core.env`
+**File:** `/opt/streamlab/secrets/cloudflared.env`
 
 ```env
 TUNNEL_TOKEN=PASTE_YOUR_CLOUDFLARE_TUNNEL_TOKEN_HERE
@@ -399,7 +399,7 @@ services:
       - 1.0.0.1
     command: tunnel --no-autoupdate run
     env_file:
-      - /opt/streamlab/secrets/core.env
+      - /opt/streamlab/secrets/cloudflared.env
     networks:
       - containers_network
     labels:
