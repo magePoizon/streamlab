@@ -7,6 +7,7 @@ set -e
 cd /opt/streamlab/monitoring
 docker compose pull
 docker compose up -d
+docker image prune -f
 EOF
 
 sudo chmod +x /usr/local/bin/update_monitoring
