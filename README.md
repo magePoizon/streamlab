@@ -202,10 +202,16 @@ cat /etc/resolv.conf
 getent hosts github.com
 ```
 
-### 3.2.2 Disable IPv6 on Docker 
-If IPv6 issues arise
+### 3.2.2 Configure Docker DNS, IPv6, and log rotation
+If IPv6 issues arise, set Docker DNS explicitly and disable IPv6. Also configure Docker log rotation so container logs cannot grow indefinitely.
 
-1) Create a docker daemon to set dns settings:
+1) Install `jq` for JSON validation:
+```bash
+sudo apt update
+sudo apt install -y jq
+```
+
+2) Create or edit the Docker daemon config:
 ```bash 
 sudo nano /etc/docker/daemon.json
 ```
@@ -213,18 +219,38 @@ sudo nano /etc/docker/daemon.json
 ```json
 {
   "dns": ["1.1.1.1", "1.0.0.1", "9.9.9.9"],
-  "ipv6": false
+  "ipv6": false,
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "50m",
+    "max-file": "5"
+  }
 }
 ```
 
-2) Restart docker:
+This keeps up to 5 log files of 50 MB each per container.
+
+3) Validate the JSON:
+```bash
+sudo jq . /etc/docker/daemon.json
+```
+
+4) Restart Docker:
 ```bash 
 sudo systemctl restart docker
 ```
 
-3) Verify
+5) Verify:
 ```bash 
 sudo systemctl status docker
+docker info | grep -A5 "Logging Driver"
+```
+
+6) Recreate existing containers so they use the new log settings:
+```bash
+cd /opt/streamlab/management && docker compose up -d --force-recreate
+cd /opt/streamlab/monitoring && docker compose up -d --force-recreate
+cd /opt/streamlab/media && docker compose up -d --force-recreate
 ```
 
 
