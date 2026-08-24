@@ -1,5 +1,11 @@
 # Stremio Homelab Server
 
+# Disclaimer
+
+This repository is provided solely for lawful educational, demonstrative, and personal homelab use. It documents general-purpose self-hosting, networking, monitoring, and media-management infrastructure; it does not provide or endorse access to copyrighted content, unauthorized services, or third-party accounts.
+
+You are responsible for ensuring that your use of this material complies with all applicable laws, licences, service terms, and content-provider rules in your jurisdiction. Only connect services, accounts, networks, and media that you own or are expressly authorized to use. Do not use this project to infringe copyright, bypass access controls, evade service restrictions, or access systems or content without permission. No credentials, API keys, subscriptions, media, or third-party access are supplied by this repository.
+
 ## Notes to self:
 9.4 needs populating
 
