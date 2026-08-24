@@ -1,5 +1,9 @@
 # Stremio Homelab Server
 
+## Notes to self:
+9.4 needs populating
+
+
 ---
 
 **Required Services/Containers**:
@@ -1107,6 +1111,7 @@ In Cloudflare Zero Trust:
 
 ### 9.4 Allow certain aiostreams unauthenticated access
 Actually can't remember how to do this, need to ask george to show me again
+Edit from the future, I remembered, and then I forgot, will update eventually. 
 
 ---
 
